@@ -10,9 +10,10 @@ var appsInfoCmd = &cobra.Command{
 }
 
 // OPTIONS
-//   -a, --app=app          app to run command against
-//   -c, --confirm=confirm
-//   -r, --remote=remote    git remote of app to use
+//   -a, --app=app        app to run command against
+//   -j, --json
+//   -r, --remote=remote  git remote of app to use
+//   -s, --shell          output more shell friendly key/value pairs
 
 func init() {
 	AppsCmd.AddCommand(appsInfoCmd)
