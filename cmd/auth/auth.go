@@ -16,3 +16,5 @@ var AuthCmd = &cobra.Command{
 func loadDefaultVariables() {
 	// verbose = viper.GetBool("VERBOSE")
 }
+
+// https://pkg.go.dev/github.com/markbates/goth/providers/heroku
