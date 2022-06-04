@@ -42,6 +42,8 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gouki.yaml)")
+	rootCmd.PersistentFlags().Bool("json", false, "--json provides output in JSON format")
+	rootCmd.PersistentFlags().Bool("x", false, "-x provides extended information")
 
 	rootCmd.AddCommand(apps.AppsCmd)
 	rootCmd.AddCommand(auth.AuthCmd)

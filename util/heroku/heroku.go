@@ -7,16 +7,11 @@ import (
 )
 
 func MakeClient() (heroku.Client, error) {
-	// headers := http.Header{}
 	HEROKU_API_TOKEN := os.Getenv("HEROKU_API_TOKEN")
-
-	// bearerToken := fmt.Sprintf("Bearer: %s", HEROKU_API_TOKEN)
-
-	// headers.Add("Accept", "application/vnd.heroku+json; version=3")
-	// headers.Add("Authorization", bearerToken)
+	HEROKU_USERNAME := os.Getenv("HEROKU_USERNAME")
 
 	client := heroku.Client{
-		Username: "troy.coll@gmail.com",
+		Username: HEROKU_USERNAME,
 		Password: HEROKU_API_TOKEN}
 
 	return client, nil
