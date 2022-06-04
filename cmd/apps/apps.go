@@ -9,8 +9,8 @@ import (
 
 var AppsCmd = &cobra.Command{
 	Use:   "apps",
-	Short: "",
-	Long:  "",
+	Short: "get info about all apps",
+	Long:  "get information about all the Heroku apps you own",
 	Args:  cobra.MaximumNArgs(1),
 	Run:   apps,
 }
