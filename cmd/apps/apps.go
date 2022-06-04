@@ -27,6 +27,7 @@ func apps(cmd *cobra.Command, args []string) {
 	resp, err := client.AppList(nil)
 	if err != nil {
 		fmt.Printf("error retrieving apps: %s", err)
+		fmt.Printf("%s", client.AdditionalHeaders.Get("Authorization"))
 	}
 
 	// print that ish

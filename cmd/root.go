@@ -5,7 +5,6 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -55,7 +54,6 @@ func init() {
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	godotenv.Load(".env")
-	fmt.Printf("%s", os.Getenv("HEROKU_API_TOKEN"))
 
 	// if cfgFile != "" {
 	// 	// Use config file from the flag.
