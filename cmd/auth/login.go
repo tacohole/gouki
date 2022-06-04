@@ -14,9 +14,16 @@ var loginCmd = &cobra.Command{
 	Run:   login,
 }
 
+// -e, --expires-in=expires-in  duration of token in seconds (default 30 days)
+//   -i, --interactive            login with username/password
+//   --browser=browser            browser to open SSO with (example: "firefox", "safari")
+
 func init() {
 	AuthCmd.AddCommand(loginCmd)
 }
+
+// URL: https://cli-auth.heroku.com/auth/cli/browser/
+// https://cli-auth.heroku.com/auth/cli/callback?code=47239e06-7781-411c-8df6-867cac68347c&state=941d093a-058c-4933-9bbe-7d72a9a52cb8
 
 func login(cmd *cobra.Command, args []string) {
 	// read the flags for browser open or interactive
@@ -34,4 +41,6 @@ func login(cmd *cobra.Command, args []string) {
 	// and the password in a non-cleartext prompt from the cli
 
 	// take the token response and write it to .netrc
+
+	// `Logged in as ${color.green(account.email!)}`
 }
