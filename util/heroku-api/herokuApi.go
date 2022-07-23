@@ -1,4 +1,4 @@
-package heroku
+package herokuApi
 
 import (
 	"os"
