@@ -39,10 +39,8 @@ func init() {
 func apps(cmd *cobra.Command, args []string) {
 	loadDefaultVariables()
 	// setup client
-	client, err := herokuApi.MakeClient()
-	if err != nil {
-		fmt.Printf("error making client: %s", err)
-	}
+	client := herokuApi.MakeClient()
+
 	// get apps
 	resp, err := client.AppList(nil)
 	if err != nil {
@@ -63,5 +61,5 @@ func appPrinter(apps []heroku.App, username string) {
 }
 
 func loadDefaultVariables() {
-	// verbose = viper.GetBool("VERBOSE")
+	// verbose := viper.GetBool("VERBOSE")
 }

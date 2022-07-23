@@ -11,6 +11,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/tacohole/gouki/cmd/apps"
 	"github.com/tacohole/gouki/cmd/auth"
+	"github.com/tacohole/gouki/cmd/logs"
 )
 
 var cfgFile string
@@ -51,6 +52,7 @@ func init() {
 
 	rootCmd.AddCommand(apps.AppsCmd)
 	rootCmd.AddCommand(auth.AuthCmd)
+	rootCmd.AddCommand(logs.LogsCmd)
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.

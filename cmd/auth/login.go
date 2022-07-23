@@ -1,13 +1,18 @@
 package auth
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"log"
 	"os"
+	"strings"
+	"syscall"
 
-	"github.com/pkg/browser"
+	"github.com/bgentry/heroku-go"
 	"github.com/spf13/cobra"
+	"golang.org/x/term"
+
 	herokuApi "github.com/tacohole/gouki/util/heroku-api"
 )
 
@@ -16,7 +21,7 @@ var loginCmd = &cobra.Command{
 	Long: `logs in and writes an auth token to someplace
 	OPTIONS
 -e, --expires-in=expires-in  duration of token in seconds (default 30 days)
--i, --interactive            login with username/password
+-i, --interactive            login with username/password, not available for MFA accounts
 --browser=browser            browser to open SSO with (example: "firefox", "safari")`,
 	Use: "login",
 	Run: login,
@@ -42,10 +47,12 @@ func init() {
 func login(cmd *cobra.Command, args []string) {
 	loadDefaultVariables()
 
-	token, err := getToken(interactive)
+	oAuth, err := getToken(interactive)
 	if err != nil {
 		log.Printf("error grabbing token: %v", err)
 	}
+
+	token := oAuth.Secret
 
 	// take the token response and write it to .netrc
 	// open .netrc
@@ -56,7 +63,7 @@ func login(cmd *cobra.Command, args []string) {
 	}
 	defer netRc.Close()
 	// write token to .netrc
-	if _, err = io.WriteString(netRc, *token); err != nil {
+	if _, err = io.WriteString(netRc, token); err != nil {
 		log.Printf("can't write to netrc: %v", err)
 	}
 	netRc.Sync()
@@ -71,10 +78,7 @@ func login(cmd *cobra.Command, args []string) {
 
 func getUserName() (*string, error) {
 	// call to API for account info
-	client, err := herokuApi.MakeClient()
-	if err != nil {
-		log.Printf("error: %v", err)
-	}
+	client := herokuApi.MakeClient()
 
 	account, err := client.AccountInfo()
 	if err != nil {
@@ -84,7 +88,7 @@ func getUserName() (*string, error) {
 	return &account.Email, nil
 }
 
-func getToken(i bool) (*string, error) {
+func getToken(i bool) (*heroku.OAuthClient, error) {
 	// read the flags for browser open or interactive
 	if i {
 		token, err := interactiveLogin()
@@ -94,29 +98,54 @@ func getToken(i bool) (*string, error) {
 		return token, nil
 
 	} else {
-		token, err := browserLogin(browserVar)
-		if err != nil {
-			log.Printf("error: %v", err)
-		}
-		return token, nil
+		// token, err := browserLogin(browserVar)
+		// if err != nil {
+		// 	log.Printf("error: %v", err)
+		// }
+		return nil, nil
 	}
 }
 
-func browserLogin(b string) (*string, error) {
-	// press any key to open the browser
-	// or press q to exit
-	// open the browser
+// func browserLogin(b string) (*string, error) {
+// 	// press any key to open the browser
+// 	// or press q to exit
+// 	// open the browser
 
-	if err := browser.OpenURL(Url); err != nil {
-		return nil, fmt.Errorf("unable to open browser: %v", err)
-	}
+// 	if err := browser.OpenURL(Url); err != nil {
+// 		return nil, fmt.Errorf("unable to open browser: %v", err)
+// 	}
 
-	return nil, nil
-}
+// 	return nil, nil
+// }
 
-func interactiveLogin() (*string, error) {
+func interactiveLogin() (*heroku.OAuthClient, error) {
 	// else grab the username
 	// and the password in a non-cleartext prompt from the cli
+	reader := bufio.NewReader(os.Stdin)
 
-	return nil, nil
+	log.Printf("username: ")
+	rawUser, err := reader.ReadString('\n')
+	if err != nil {
+		return nil, fmt.Errorf("%v", err)
+	}
+
+	user := strings.TrimSpace(rawUser)
+
+	log.Printf("password: ")
+	bytePw, err := term.ReadPassword(int(syscall.Stdin))
+	if err != nil {
+		return nil, fmt.Errorf("%v", err)
+	}
+
+	password := string(bytePw)
+
+	// make our own OAuth client with the username and password
+	oAuth, err := herokuApi.MakeOAuthClient(user, password)
+	if err != nil {
+		return nil, fmt.Errorf("%v", err)
+	}
+
+	return oAuth, nil
 }
+
+// API call to actually do the token thing for interactive
