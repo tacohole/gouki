@@ -4,6 +4,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"time"
 
 	"github.com/spf13/cobra"
 	herokuApi "github.com/tacohole/gouki/util/heroku-api"
@@ -35,8 +36,6 @@ func init() {
 }
 
 func logs(cmd *cobra.Command, args []string) {
-	// appIdentity
-
 	client := herokuApi.MakeClient()
 
 	// logSessionCreateOpts
@@ -55,4 +54,16 @@ func logs(cmd *cobra.Command, args []string) {
 	defer resp.Body.Close()
 
 	io.Copy(os.Stdout, resp.Body)
+
+	if tail {
+		for {
+			time.Sleep(5 * time.Second)
+			resp, err := httpClient.MakeHttpRequest("GET", url, nil, nil)
+			if err != nil {
+				log.Printf("%v", err)
+			}
+
+			io.Copy(os.Stdout, resp.Body)
+		}
+	}
 }

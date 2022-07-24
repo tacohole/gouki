@@ -11,7 +11,40 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/tacohole/gouki/cmd/apps"
 	"github.com/tacohole/gouki/cmd/auth"
+	"github.com/tacohole/gouki/cmd/buildpacks"
+	"github.com/tacohole/gouki/cmd/builds"
+	"github.com/tacohole/gouki/cmd/certs"
+	"github.com/tacohole/gouki/cmd/ci"
+	"github.com/tacohole/gouki/cmd/commands"
+	"github.com/tacohole/gouki/cmd/config"
+	"github.com/tacohole/gouki/cmd/container"
+	"github.com/tacohole/gouki/cmd/domains"
+	"github.com/tacohole/gouki/cmd/drains"
+	"github.com/tacohole/gouki/cmd/dyno"
+	"github.com/tacohole/gouki/cmd/features"
+	"github.com/tacohole/gouki/cmd/git"
+	"github.com/tacohole/gouki/cmd/keys"
+	"github.com/tacohole/gouki/cmd/labs"
+	"github.com/tacohole/gouki/cmd/local"
 	"github.com/tacohole/gouki/cmd/logs"
+	"github.com/tacohole/gouki/cmd/maintenance"
+	"github.com/tacohole/gouki/cmd/members"
+	"github.com/tacohole/gouki/cmd/notifications"
+	"github.com/tacohole/gouki/cmd/orgs"
+	"github.com/tacohole/gouki/cmd/pg"
+	"github.com/tacohole/gouki/cmd/pipelines"
+	"github.com/tacohole/gouki/cmd/ps"
+	"github.com/tacohole/gouki/cmd/psql"
+	"github.com/tacohole/gouki/cmd/redis"
+	"github.com/tacohole/gouki/cmd/regions"
+	"github.com/tacohole/gouki/cmd/releases"
+	"github.com/tacohole/gouki/cmd/reviewapps"
+	"github.com/tacohole/gouki/cmd/run"
+	"github.com/tacohole/gouki/cmd/sessions"
+	"github.com/tacohole/gouki/cmd/spaces"
+	"github.com/tacohole/gouki/cmd/status"
+	trustedips "github.com/tacohole/gouki/cmd/trusted-ips"
+	"github.com/tacohole/gouki/cmd/webhooks"
 )
 
 var cfgFile string
@@ -52,7 +85,40 @@ func init() {
 
 	rootCmd.AddCommand(apps.AppsCmd)
 	rootCmd.AddCommand(auth.AuthCmd)
+	rootCmd.AddCommand(buildpacks.BuildpacksCmd)
+	rootCmd.AddCommand(builds.BuildsCmd)
+	rootCmd.AddCommand(certs.CertsCmd)
+	rootCmd.AddCommand(ci.CiCmd)
+	rootCmd.AddCommand(commands.CommandsCmd)
+	rootCmd.AddCommand(config.ConfigCmd)
+	rootCmd.AddCommand(container.ContainerCmd)
+	rootCmd.AddCommand(domains.DomansCmd)
+	rootCmd.AddCommand(drains.DrainsCmd)
+	rootCmd.AddCommand(dyno.DynoCmd)
+	rootCmd.AddCommand(features.FeaturesCmd)
+	rootCmd.AddCommand(git.GitCmd)
+	rootCmd.AddCommand(keys.KeysCmd)
+	rootCmd.AddCommand(labs.LabsCmd)
+	rootCmd.AddCommand(local.LocalCmd)
 	rootCmd.AddCommand(logs.LogsCmd)
+	rootCmd.AddCommand(maintenance.MaintenanceCmd)
+	rootCmd.AddCommand(members.MembersCmd)
+	rootCmd.AddCommand(notifications.NotificationsCmd)
+	rootCmd.AddCommand(orgs.OrgsCmd)
+	rootCmd.AddCommand(pg.PgCmd)
+	rootCmd.AddCommand(pipelines.PipelinesCmd)
+	rootCmd.AddCommand(ps.PsCmd)
+	rootCmd.AddCommand(psql.PsqlCmd)
+	rootCmd.AddCommand(redis.RedisCmd)
+	rootCmd.AddCommand(regions.RegionsCmd)
+	rootCmd.AddCommand(releases.ReleasesCmd)
+	rootCmd.AddCommand(reviewapps.ReviewAppsCmd)
+	rootCmd.AddCommand(run.RunCmd)
+	rootCmd.AddCommand(sessions.SessionsCmd)
+	rootCmd.AddCommand(spaces.SpacesCmd)
+	rootCmd.AddCommand(status.StatusCmd)
+	rootCmd.AddCommand(trustedips.TrustedIpsCmd)
+	rootCmd.AddCommand(webhooks.WebhooksCmd)
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
