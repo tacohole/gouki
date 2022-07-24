@@ -6,11 +6,11 @@
 
 - A re-implementation of the [Heroku CLI](https://github.com/heroku/cli) in Golang
 - Uses [heroku-go](https://github.com/bgentry/heroku-go) for interacting with the Heroku API
-- Uses [cobra](https://github.com/spf13/cobra) for command
+- Uses [cobra](https://github.com/spf13/cobra) for CLI scaffolding
 
 ## WHY?
 
-- I use the CLI every day
+- I use the Heroku CLI every day
 - There are some things I want to improve about it, namely performance and error messages
 - I like writing command line tools
 
@@ -23,4 +23,34 @@
 
 ## Project Status
 
-- We are at v-0.04, it doesn't do anything yet, please don't perceive me
+### What works:
+
+- `apps`
+- `logs`
+
+### What doesn't work:
+
+- everything else
+
+## Pre-reqs
+
+- Go v1.18+
+- Heroku account
+- Heroku API token
+
+## Installation
+
+- `gh repo clone tacohole/gouki`
+- `cd gouki`
+- `install.sh`
+- `HEROKU_USERNAME` set to your Heroku username
+- `HEROKU_API_TOKEN` containing a valid Heroku API token
+
+## Usage
+
+`gouki cmd subcmd --flagName flagvalue`
+
+### examples
+
+invocation: `gouki apps`
+output: ``
