@@ -1,5 +1,5 @@
 /*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
+Copyright © 2022 TROY COLL <troy.coll@gmail.com>
 
 */
 package cmd
@@ -9,6 +9,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
+	"github.com/tacohole/gouki/cmd/access"
 	"github.com/tacohole/gouki/cmd/apps"
 	"github.com/tacohole/gouki/cmd/auth"
 	"github.com/tacohole/gouki/cmd/buildpacks"
@@ -51,6 +52,7 @@ var cfgFile string
 var Verbose bool
 var Json bool
 var Extended bool
+var AppName string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -83,6 +85,10 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&Json, "json", "j", false, "--json provides output in JSON format")
 	rootCmd.PersistentFlags().BoolVarP(&Extended, "extended", "x", false, "-x provides extended information")
 
+	rootCmd.PersistentFlags().StringVarP(&AppName, "app", "a", "", "the name of the Heroku app")
+
+	rootCmd.AddCommand(access.AccessCmd)
+	// rootCmd.AddCommand(addons.AddonsCmd)
 	rootCmd.AddCommand(apps.AppsCmd)
 	rootCmd.AddCommand(auth.AuthCmd)
 	rootCmd.AddCommand(buildpacks.BuildpacksCmd)

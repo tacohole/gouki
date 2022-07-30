@@ -17,10 +17,10 @@ var BuildpacksCmd = &cobra.Command{
 // var personalApps bool
 // var space string
 // var team string
-var appName string
+// var appName string
 
 func init() {
-	BuildpacksCmd.Flags().StringVarP(&appName, "app", "a", "", "")
+	// BuildpacksCmd.Flags().StringVarP(&appName, "app", "a", "", "")
 
 }
 
