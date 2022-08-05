@@ -17,7 +17,7 @@
 ## Project Goals
 
 - Support for all existing [Heroku CLI commands](https://devcenter.heroku.com/articles/heroku-cli-commands) and functionality
-- Identical command syntax, arguments, and flags
+- Similar command syntax, arguments, and flags
 - Support for MacOS, Windows, and common Linux distros
 - Support for common Heroku CLI plug-ins like `pg-extras`, `builds`, and `repo`
 
@@ -25,6 +25,7 @@
 
 ### What works:
 
+- `access`
 - `apps`
 - `logs`
 
@@ -42,7 +43,8 @@
 
 - `gh repo clone tacohole/gouki`
 - `cd gouki`
-- `install.sh`
+- `go install`
+- `cp .env.sample .env`
 - `HEROKU_USERNAME` set to your Heroku username
 - `HEROKU_API_TOKEN` containing a valid Heroku API token
 
@@ -53,4 +55,4 @@
 ### examples
 
 invocation: `gouki apps`
-output: ``
+output: `??`
