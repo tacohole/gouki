@@ -25,5 +25,5 @@ func init() {
 }
 
 func createApp(cmd *cobra.Command, args []string) {
-	loadDefaultVariables()
+
 }

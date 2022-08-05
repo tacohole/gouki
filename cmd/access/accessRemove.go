@@ -16,8 +16,6 @@ OPTIONS
 }
 
 func init() {
-	AccessCmd.Flags().StringVarP(&appName, "app", "a", "", "")
-	AccessCmd.Flags().StringVarP(&remote, "remote", "r", "", "")
 
 }
 

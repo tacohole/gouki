@@ -9,7 +9,9 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"github.com/tacohole/gouki/cmd/access"
+	"github.com/tacohole/gouki/cmd/addons"
 	"github.com/tacohole/gouki/cmd/apps"
 	"github.com/tacohole/gouki/cmd/auth"
 	"github.com/tacohole/gouki/cmd/buildpacks"
@@ -53,6 +55,7 @@ var Verbose bool
 var Json bool
 var Extended bool
 var AppName string
+var Remote string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -81,14 +84,11 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gouki.yaml)")
-	rootCmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "v", false, "verbose output")
-	rootCmd.PersistentFlags().BoolVarP(&Json, "json", "j", false, "--json provides output in JSON format")
-	rootCmd.PersistentFlags().BoolVarP(&Extended, "extended", "x", false, "-x provides extended information")
 
-	rootCmd.PersistentFlags().StringVarP(&AppName, "app", "a", "", "the name of the Heroku app")
+	LoadGlobalFlags(rootCmd)
 
 	rootCmd.AddCommand(access.AccessCmd)
-	// rootCmd.AddCommand(addons.AddonsCmd)
+	rootCmd.AddCommand(addons.AddonsCmd)
 	rootCmd.AddCommand(apps.AppsCmd)
 	rootCmd.AddCommand(auth.AuthCmd)
 	rootCmd.AddCommand(buildpacks.BuildpacksCmd)
@@ -129,6 +129,21 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func LoadGlobalFlags(cmd *cobra.Command) {
+	// add config flag
+	cmd.PersistentFlags().StringVarP(&AppName, "app", "a", "", "the name of the Heroku app")
+	cmd.PersistentFlags().BoolVarP(&Extended, "extended", "x", false, "-x provides extended information")
+	cmd.PersistentFlags().BoolVarP(&Json, "json", "j", false, "--json provides output in JSON format")
+	cmd.PersistentFlags().StringVarP(&Remote, "remote", "r", "", "the git remote to use")
+	cmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "v", false, "verbose output")
+
+	viper.BindPFlag("app", cmd.PersistentFlags().Lookup("app"))
+	viper.BindPFlag("extended", cmd.PersistentFlags().Lookup("extended"))
+	viper.BindPFlag("json", cmd.PersistentFlags().Lookup("json"))
+	viper.BindPFlag("remote", cmd.PersistentFlags().Lookup("remote"))
+	viper.BindPFlag("verbose", cmd.PersistentFlags().Lookup("verbose"))
 }
 
 // initConfig reads in config file and ENV variables if set.

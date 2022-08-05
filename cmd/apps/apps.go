@@ -5,6 +5,7 @@ import (
 
 	heroku "github.com/bgentry/heroku-go"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	herokuApi "github.com/tacohole/gouki/util/heroku-api"
 )
 
@@ -22,14 +23,14 @@ OPTIONS
 	Run:  apps,
 }
 
-// var verbose bool
 var allApps bool
 var personalApps bool
 var space string
 var team string
 
 func init() {
-	AppsCmd.Flags().BoolVarP(&allApps, "all", "a", false, "include apps in all teams")
+	loadDefaultVariables()
+	AppsCmd.Flags().BoolVarP(&allApps, "all", "A", false, "include apps in all teams")
 	AppsCmd.Flags().BoolVarP(&personalApps, "personal", "p", false, "list apps in personal account when a default team is set")
 	AppsCmd.Flags().StringVarP(&space, "space", "s", "", "filter by space")
 	AppsCmd.Flags().StringVarP(&team, "team", "t", "", "team to use")
@@ -37,7 +38,6 @@ func init() {
 }
 
 func apps(cmd *cobra.Command, args []string) {
-	loadDefaultVariables()
 	// setup client
 	client := herokuApi.MakeClient()
 
@@ -61,5 +61,5 @@ func appPrinter(apps []heroku.App, username string) {
 }
 
 func loadDefaultVariables() {
-	// verbose := viper.GetBool("VERBOSE")
+	viper.Get("app")
 }

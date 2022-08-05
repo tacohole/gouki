@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	herokuApi "github.com/tacohole/gouki/util/heroku-api"
 	"github.com/tacohole/gouki/util/httpClient"
 )
@@ -18,7 +19,6 @@ var LogsCmd = &cobra.Command{
 	Run:   logs,
 }
 
-var appName string
 var dyno string
 var num int
 var remote string
@@ -26,7 +26,6 @@ var source string
 var tail bool
 
 func init() {
-	LogsCmd.Flags().StringVarP(&appName, "app", "a", "", "")
 	LogsCmd.Flags().StringVarP(&dyno, "dyno", "d", "", "")
 	LogsCmd.Flags().IntVarP(&num, "num", "n", 50, "")
 	LogsCmd.Flags().StringVarP(&remote, "remote", "r", "", "")
@@ -36,6 +35,7 @@ func init() {
 }
 
 func logs(cmd *cobra.Command, args []string) {
+	appName := viper.GetString("app")
 	client := herokuApi.MakeClient()
 
 	// logSessionCreateOpts

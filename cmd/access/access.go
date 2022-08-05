@@ -1,19 +1,27 @@
 package access
 
 import (
+	"fmt"
 	"log"
 	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	herokuApi "github.com/tacohole/gouki/util/heroku-api"
 )
 
 var AccessCmd = &cobra.Command{
 	Short: "list who has access to an app",
-	Long:  ``,
-	Use:   "access",
-	Args:  cobra.MinimumNArgs(1),
-	Run:   access,
+	Long: `USAGE
+  $ gouki access
+
+OPTIONS
+  -a, --app=app        (required) app to run command against
+  -r, --remote=remote  git remote of app to use
+  --json               output in json format`,
+	Use:  "access",
+	Args: cobra.MaximumNArgs(1),
+	Run:  access,
 }
 
 type AppAccess struct {
@@ -22,15 +30,16 @@ type AppAccess struct {
 }
 
 func init() {
-
 }
 
 func access(cmd *cobra.Command, args []string) {
+	app := viper.GetString("app")
+
 	// client
 	client := herokuApi.MakeClient()
 
 	// app get info
-	AppInfo, err := client.AppInfo(appName)
+	AppInfo, err := client.AppInfo(app)
 	if err != nil {
 		log.Printf("%v", err)
 	}
@@ -38,14 +47,19 @@ func access(cmd *cobra.Command, args []string) {
 	// return value
 	users := []AppAccess{}
 
+	ownerEmail := AppInfo.Owner.Email
+	appOwner := AppAccess{
+		Email: ownerEmail,
+		Role:  "owner",
+	}
+	users = append(users, appOwner)
+
 	// get app collaborators
 	// collaborator.User.Email
-	collaborators, err := client.CollaboratorList(appName, nil)
+	collaborators, err := client.CollaboratorList(app, nil)
 	if err != nil {
 		log.Printf("%v", err)
 	}
-
-	ownerEmail := AppInfo.Owner.Email
 
 	// check if the app is owned by a team
 	if isTeamApp(ownerEmail) {
@@ -72,7 +86,7 @@ func access(cmd *cobra.Command, args []string) {
 		}
 	}
 
-	// pull the admins out of the collaborators array
+	// skip the admins in the collaborators array
 	for _, u := range users {
 		for _, c := range collaborators {
 			if c.User.Email == u.Email {
@@ -93,7 +107,7 @@ func access(cmd *cobra.Command, args []string) {
 
 func accessPrinter(users []AppAccess) {
 	for _, u := range users {
-		log.Printf("%s			%s \n", u.Email, u.Role)
+		fmt.Printf("%s  %s \n", u.Email, u.Role)
 	}
 }
 

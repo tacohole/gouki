@@ -19,5 +19,5 @@ func init() {
 }
 
 func destroyApp(cmd *cobra.Command, args []string) {
-	loadDefaultVariables()
+
 }
