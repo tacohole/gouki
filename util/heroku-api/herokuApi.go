@@ -109,3 +109,16 @@ func AddTeamCollaborator(app string, email string, permissions []string, silent 
 
 	return &collab, nil
 }
+
+func UpdateTeamCollaborator(app string, email string, permissions []string) (*heroku.OrganizationAppCollaborator, error) {
+	collab := heroku.OrganizationAppCollaborator{}
+
+	client := MakeClient()
+	path := fmt.Sprintf("/teams/apps/%s/collaborators/%s", app, email)
+
+	if err := client.APIReq(collab, "PATCH", path, permissions); err != nil {
+		return nil, err
+	}
+
+	return &collab, nil
+}

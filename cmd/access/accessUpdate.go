@@ -1,22 +1,35 @@
 package access
 
-import "github.com/spf13/cobra"
+import (
+	"log"
+
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	herokuApi "github.com/tacohole/gouki/util/heroku-api"
+)
 
 var AccessUpdateCmd = &cobra.Command{
-	Short: "list who has access to an app",
+	Short: "update existing collaborators on an team app",
 	Long: `USAGE
-  $ gouki access
-
-OPTIONS
-  -a, --app=app        (required) app to run command against
-  -r, --remote=remote  git remote of app to use
-  --json               output in json format`,
-	Use: "access:update",
+  $ gouki access update -u EMAIL -a APP -p PERMISSIONS`,
+	Use: "update",
 	Run: accessUpdate,
 }
 
 func init() {
+	AccessAddCmd.Flags().StringArrayVarP(&permissions, "permissions", "p", []string{}, "list of permissions comma separated")
+	AccessAddCmd.Flags().StringVarP(&user, "user", "u", "", "email of collaborator")
 
+	AccessAddCmd.MarkFlagRequired("user")
+	AccessAddCmd.MarkFlagRequired("app")
+	AccessCmd.AddCommand(AccessUpdateCmd)
 }
 
-func accessUpdate(cmd *cobra.Command, args []string) {}
+func accessUpdate(cmd *cobra.Command, args []string) {
+	app := viper.GetString("app")
+
+	_, err := herokuApi.UpdateTeamCollaborator(app, user, permissions)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+}
