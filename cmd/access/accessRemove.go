@@ -19,4 +19,6 @@ func init() {
 
 }
 
-func accessRemove(cmd *cobra.Command, args []string) {}
+func accessRemove(cmd *cobra.Command, args []string) {
+	// Removing pleaserememberdevtest@gmail.com access from the app please-remember-staging... don
+}

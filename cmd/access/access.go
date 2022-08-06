@@ -3,7 +3,6 @@ package access
 import (
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -13,12 +12,7 @@ import (
 var AccessCmd = &cobra.Command{
 	Short: "list who has access to an app",
 	Long: `USAGE
-  $ gouki access
-
-OPTIONS
-  -a, --app=app        (required) app to run command against
-  -r, --remote=remote  git remote of app to use
-  --json               output in json format`,
+  $ gouki access`,
 	Use:  "access",
 	Args: cobra.MaximumNArgs(1),
 	Run:  access,
@@ -35,10 +29,8 @@ func init() {
 func access(cmd *cobra.Command, args []string) {
 	app := viper.GetString("app")
 
-	// client
 	client := herokuApi.MakeClient()
 
-	// app get info
 	AppInfo, err := client.AppInfo(app)
 	if err != nil {
 		log.Printf("%v", err)
@@ -55,27 +47,21 @@ func access(cmd *cobra.Command, args []string) {
 	users = append(users, appOwner)
 
 	// get app collaborators
-	// collaborator.User.Email
 	collaborators, err := client.CollaboratorList(app, nil)
 	if err != nil {
 		log.Printf("%v", err)
 	}
 
-	// check if the app is owned by a team
-	if isTeamApp(ownerEmail) {
+	if herokuApi.IsTeamApp(ownerEmail) {
 		// first get the team name from the email
-		teamName := getTeamNameFromEmail(ownerEmail)
+		teamName := herokuApi.GetTeamNameFromEmail(ownerEmail)
 
-		// then get the team members
-		// member.Email, member.Role
 		members, err := client.OrganizationMemberList(teamName, nil)
 		if err != nil {
 			log.Printf("%v", err)
 		}
 
-		// since all team admins have access to all apps, pick out the admins
 		for _, m := range members {
-			// if the role is admin, add them to the []AppAccess
 			if m.Role == "admin" {
 				user := AppAccess{
 					Email: m.Email,
@@ -100,7 +86,6 @@ func access(cmd *cobra.Command, args []string) {
 		}
 	}
 
-	// print it
 	accessPrinter(users)
 
 }
@@ -109,13 +94,4 @@ func accessPrinter(users []AppAccess) {
 	for _, u := range users {
 		fmt.Printf("%s  %s \n", u.Email, u.Role)
 	}
-}
-
-func getTeamNameFromEmail(email string) string {
-	return strings.TrimSuffix(email, ".@herokumanager.com")
-}
-
-func isTeamApp(ownerEmail string) bool {
-	// use a regexp to check if the app is owned by a Heroku team
-	return strings.Contains(ownerEmail, ".@herokumanager.com")
 }

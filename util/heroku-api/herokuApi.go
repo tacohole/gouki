@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"github.com/bgentry/heroku-go"
 	"github.com/tacohole/gouki/util/httpClient"
@@ -59,4 +60,52 @@ func MakeLogSessionOpts(dyno string, num int, source string, tail bool) *heroku.
 	}
 
 	return &logOpts
+}
+
+func MakeCollaboratorOpts(silent bool) *heroku.CollaboratorCreateOpts {
+	collabOpts := heroku.CollaboratorCreateOpts{
+		Silent: &silent,
+	}
+
+	return &collabOpts
+}
+
+func IsTeamApp(ownerEmail string) bool {
+	return strings.Contains(ownerEmail, ".@herokumanager.com")
+}
+
+func GetTeamNameFromEmail(email string) string {
+	return strings.TrimSuffix(email, ".@herokumanager.com")
+}
+
+func GetTeamInfo(teamName string) (*heroku.Organization, error) {
+	team := heroku.Organization{}
+
+	client := MakeClient()
+	path := fmt.Sprintf("/teams/%s/features", teamName)
+
+	if err := client.APIReq(team, "GET", path, nil); err != nil {
+		return nil, err
+	}
+
+	return &team, nil
+}
+
+func AddTeamCollaborator(app string, email string, permissions []string, silent bool) (*heroku.OrganizationAppCollaborator, error) {
+	collab := heroku.OrganizationAppCollaborator{}
+
+	client := MakeClient()
+	path := fmt.Sprintf("/teams/apps/%s/collaborators", app)
+
+	body := TeamCollaborator{
+		permissions: permissions,
+		email:       email,
+		silent:      silent,
+	}
+
+	if err := client.APIReq(collab, "POST", path, body); err != nil {
+		return nil, err
+	}
+
+	return &collab, nil
 }
