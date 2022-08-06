@@ -18,12 +18,15 @@ var AccessCmd = &cobra.Command{
 	Run:  access,
 }
 
+var user string
+
 type AppAccess struct {
 	Email string
 	Role  string
 }
 
 func init() {
+
 }
 
 func access(cmd *cobra.Command, args []string) {
@@ -91,6 +94,7 @@ func access(cmd *cobra.Command, args []string) {
 }
 
 func accessPrinter(users []AppAccess) {
+	// TODO: some kind of a sort here to display things with better spacing
 	for _, u := range users {
 		fmt.Printf("%s  %s \n", u.Email, u.Role)
 	}

@@ -23,7 +23,6 @@ EXAMPLES
 }
 
 var permissions []string
-var user string
 var silent bool
 
 func init() {

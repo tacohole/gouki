@@ -45,7 +45,6 @@ func init() {
 // https://cli-auth.heroku.com/auth/cli/callback?code=47239e06-7781-411c-8df6-867cac68347c&state=941d093a-058c-4933-9bbe-7d72a9a52cb8
 
 func login(cmd *cobra.Command, args []string) {
-	loadDefaultVariables()
 
 	oAuth, err := getToken(interactive)
 	if err != nil {
