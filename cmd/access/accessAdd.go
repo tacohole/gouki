@@ -22,7 +22,6 @@ EXAMPLES
 	Run: accessAdd,
 }
 
-var permissions []string
 var silent bool
 
 func init() {
@@ -41,6 +40,9 @@ func accessAdd(cmd *cobra.Command, args []string) {
 	client := herokuApi.MakeClient()
 
 	app := viper.GetString("app")
+	if app == "" {
+		log.Fatalf("app name is required for this command")
+	}
 
 	appInfo, err := client.AppInfo(app)
 	if err != nil {

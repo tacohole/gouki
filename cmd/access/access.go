@@ -12,13 +12,14 @@ import (
 var AccessCmd = &cobra.Command{
 	Short: "list who has access to an app",
 	Long: `USAGE
-  $ gouki access`,
+  $ gouki access -a APPNAME`,
 	Use:  "access",
 	Args: cobra.MaximumNArgs(1),
 	Run:  access,
 }
 
 var user string
+var permissions []string
 
 type AppAccess struct {
 	Email string
@@ -26,11 +27,15 @@ type AppAccess struct {
 }
 
 func init() {
+	AccessCmd.MarkFlagRequired("app")
 
 }
 
 func access(cmd *cobra.Command, args []string) {
 	app := viper.GetString("app")
+	if app == "" {
+		log.Fatalf("app name is required for this command")
+	}
 
 	client := herokuApi.MakeClient()
 

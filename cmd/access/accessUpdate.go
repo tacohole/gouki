@@ -17,16 +17,19 @@ var AccessUpdateCmd = &cobra.Command{
 }
 
 func init() {
-	AccessAddCmd.Flags().StringArrayVarP(&permissions, "permissions", "p", []string{}, "list of permissions comma separated")
-	AccessAddCmd.Flags().StringVarP(&user, "user", "u", "", "email of collaborator")
+	AccessUpdateCmd.Flags().StringArrayVarP(&permissions, "permissions", "p", []string{}, "list of permissions comma separated")
+	AccessUpdateCmd.Flags().StringVarP(&user, "user", "u", "", "email of collaborator")
 
-	AccessAddCmd.MarkFlagRequired("user")
-	AccessAddCmd.MarkFlagRequired("app")
+	AccessUpdateCmd.MarkFlagRequired("user")
+	AccessUpdateCmd.MarkFlagRequired("app")
 	AccessCmd.AddCommand(AccessUpdateCmd)
 }
 
 func accessUpdate(cmd *cobra.Command, args []string) {
 	app := viper.GetString("app")
+	if app == "" {
+		log.Fatalf("app name is required for this command")
+	}
 
 	_, err := herokuApi.UpdateTeamCollaborator(app, user, permissions)
 	if err != nil {
