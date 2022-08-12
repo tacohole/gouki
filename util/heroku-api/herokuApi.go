@@ -122,3 +122,16 @@ func UpdateTeamCollaborator(app string, email string, permissions []string) (*he
 
 	return &collab, nil
 }
+
+func GetAllAddons() (*[]heroku.Addon, error) {
+	addons := []heroku.Addon{}
+
+	client := MakeClient()
+	path := "/addons"
+
+	if err := client.APIReq(&addons, "GET", path, nil); err != nil {
+		return nil, err
+	}
+
+	return &addons, nil
+}

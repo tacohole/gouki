@@ -26,6 +26,7 @@
 ### What works:
 
 - `access`
+  - `access add`, `access remove`, `access update`
 - `apps`
 - `logs`
 

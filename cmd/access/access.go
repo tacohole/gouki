@@ -15,7 +15,7 @@ var AccessCmd = &cobra.Command{
   $ gouki access -a APPNAME`,
 	Use:  "access",
 	Args: cobra.MaximumNArgs(1),
-	Run:  access,
+	Run:  accessInfo,
 }
 
 var user string
@@ -31,7 +31,7 @@ func init() {
 
 }
 
-func access(cmd *cobra.Command, args []string) {
+func accessInfo(cmd *cobra.Command, args []string) {
 	app := viper.GetString("app")
 	if app == "" {
 		log.Fatalf("app name is required for this command")
